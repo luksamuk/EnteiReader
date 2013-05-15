@@ -1,7 +1,13 @@
-#include <panel.h>
-// Prompt de comando tem tamanho 25x80.
+#ifdef _WIN32
+    #include <curses.h>
+    #include <panel.h>
+#endif
+#ifdef linux
+    #include <ncurses.h>
+    #include <panel.h>
+#endif
 
-using namespace std;
+// Prompt de comando tem tamanho 25x80.
 
 WINDOW* winreader, *winindex;
 void mostra_controles(int);
