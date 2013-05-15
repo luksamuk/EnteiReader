@@ -117,8 +117,8 @@ UpgradeLog*.XML
 #################
 ## Code::Blocks
 #################
-.depend
-.cbp
+*.depend
+*.cbp
 
 ############
 ## Windows
