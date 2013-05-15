@@ -1,4 +1,5 @@
 # depslib dependency file v1.0
-1368635220 source:c:\users\lucas\documents\github\enteireader\enteireader\main.cpp
-	<curses.h>
+1368642448 source:c:\users\lucas\documents\github\enteireader\enteireader\main.cpp
+	<panel.h>
+	<stdio.h>
 
