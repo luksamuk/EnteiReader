@@ -1,11 +1,9 @@
 #include <panel.h>
-#include <stdio.h>
 // Prompt de comando tem tamanho 25x80.
 
 using namespace std;
 
 WINDOW* winreader, *winindex;
-
 void mostra_controles(int);
 
 int main()
@@ -26,7 +24,7 @@ int main()
     mostra_controles(0);
 
     // Indice falso
-    mvwprintw(winindex, 1, 22, "Indice");
+    mvwprintw(winindex, 1, 22, "índice");
     mvwaddch(winindex, 2, 0, ACS_LTEE);
     mvwhline(winindex, 2, 1, ACS_HLINE, 28);
     mvwaddch(winindex, 2, 29, ACS_RTEE);
