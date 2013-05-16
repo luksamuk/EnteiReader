@@ -119,6 +119,7 @@ UpgradeLog*.XML
 #################
 *.depend
 *.cbp
+*.layout
 
 ############
 ## Windows
