@@ -3,17 +3,20 @@
 ReadScreen::ReadScreen()
 {
     selection = 0;
+
+    // Janela de leitura
+    reader = newwin(24, 50, 0, 0);
+
+    // Janela de índice
+    index = newwin(24, 30, 0, 50);
 }
 
 void ReadScreen::init()
 {
-    // Janela de leitura
-    reader = newwin(24, 50, 0, 0);
+    // Bordas
     box(reader, 0, 0);
-
-    // Janela de índice
-    index = newwin(24, 30, 0, 50);
     box(index, 0, 0);
+    // Cabeçalho do índice
     mvwprintw(index, 1, 22, "índice");
     mvwaddch(index, 2, 0, ACS_LTEE);
     mvwhline(index, 2, 1, ACS_HLINE, 28);
@@ -27,7 +30,10 @@ void ReadScreen::update()
         ch = wgetch(stdscr);
         switch(ch)
         {
-        case 27:
+        case KEY_F(2): // Selecionar outro livro
+            return;
+        case 27:       // Sair
+            endwin();
             exit(0);
             break;
         }

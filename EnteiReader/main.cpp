@@ -7,8 +7,9 @@
 WINDOW* controls;
 
 void mostra_controles(int);
-LibScreen libscr;
-ReadScreen readscr;
+void pair_colors(void);
+LibScreen*  libscr;
+ReadScreen* readscr;
 
 int main()
 {
@@ -20,29 +21,35 @@ int main()
     keypad(stdscr, true);
     curs_set(0);
 
+    if(has_colors()) pair_colors();
+
     controls = newwin(0, 80, 24, 0);
-    libscr.init();
-    readscr.init();
+    libscr = new LibScreen();
+    readscr = new ReadScreen();
 
     refresh();
 
-    mostra_controles(1);
-    wrefresh(controls);
-    libscr.update();
+    while(true)
+    {
+        // Pede o livro
+        libscr->init();
+        mostra_controles(1);
+        wrefresh(controls);
+        libscr->update();
 
-    mostra_controles(0);
-    wrefresh(controls);
-    readscr.refresh();
-    readscr.update();
-
-    endwin();
-    return 0;
+        // Mostra o livro
+        readscr->init();
+        mostra_controles(0);
+        wrefresh(controls);
+        readscr->refresh();
+        readscr->update();
+    }
 }
 
 void mostra_controles(int tipodemenu)
 {
     // Limpa a caixa de controles
-    for(int i = 0; i < 80; i++)
+    for(int i = 0; i < COLS; i++)
         mvwprintw(controls, 0, i, " ");
 
     switch(tipodemenu)
@@ -70,10 +77,54 @@ void mostra_controles(int tipodemenu)
         mvwprintw(controls, 0, 4, "Sair");
 
         wattron(controls, A_REVERSE);
-        mvwprintw(controls, 0, 10, "ENTER");
+        mvwprintw(controls, 0, 10, "CIMA/BAIXO");
         wattroff(controls, A_REVERSE);
-        mvwprintw(controls, 0, 16, "Escolher arquivo");
+        mvwprintw(controls, 0, 22, "Escolher");
+
+        wattron(controls, A_REVERSE);
+        mvwprintw(controls, 0, 32, "ENTER");
+        wattroff(controls, A_REVERSE);
+        mvwprintw(controls, 0, 38, "Selecionar");
+
+        wattron(controls, A_REVERSE);
+        mvwprintw(controls, 0, 50, "F2");
+        wattroff(controls, A_REVERSE);
+        mvwprintw(controls, 0, 53, "Gerenciar");
+
+        wattron(controls, A_REVERSE);
+        mvwprintw(controls, 0, 64, "F3");
+        wattroff(controls, A_REVERSE);
+        mvwprintw(controls, 0, 68, "Pesq./Ordem");
+        break;
+    case 2: // Janela de pesquisa
+        wattron(controls, A_REVERSE);
+        mvwprintw(controls, 0, 0, "F2");
+        wattroff(controls, A_REVERSE);
+        mvwprintw(controls, 0, 3, "Por nome");
+
+        wattron(controls, A_REVERSE);
+        mvwprintw(controls, 0, 12, "F3");
+        wattroff(controls, A_REVERSE);
+        mvwprintw(controls, 0, 15, "Por autor");
+
+        wattron(controls, A_REVERSE);
+        mvwprintw(controls, 0, 25, "F4");
+        wattroff(controls, A_REVERSE);
+        mvwprintw(controls, 0, 28, "Por editora");
+
+        wattron(controls, A_REVERSE);
+        mvwprintw(controls, 0, 40, "ENTER");
+        wattroff(controls, A_REVERSE);
+        mvwprintw(controls, 0, 46, "Pesquisar");
+
+        mvwprintw(controls, 0, 62, "Digite a pesquisa.");
         break;
     }
     wrefresh(controls);
+}
+
+void pair_colors(void)
+{
+    start_color();
+    init_pair(1, COLOR_RED, COLOR_BLACK);
 }
