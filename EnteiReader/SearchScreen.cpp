@@ -2,10 +2,13 @@
 
 SearchScreen::SearchScreen()
 {
+    charnum = 0;
     selection = 0;
     ordertype = 0;
     strcpy(findtext, "");
-    win = newwin(SEARCHSCREEN_SIZE_Y, SEARCHSCREEN_SIZE_X, 6, 29);
+    win = newwin(SEARCHSCREEN_SIZE_Y, SEARCHSCREEN_SIZE_X,
+                 12 - (SEARCHSCREEN_SIZE_Y / 2),
+                 40 - (SEARCHSCREEN_SIZE_X / 2));
 }
 
 void SearchScreen::init()
@@ -26,13 +29,13 @@ void SearchScreen::init()
 
     // Caixa de pesquisa
     mvwaddch(win, 8, 1, ACS_ULCORNER);
-    mvwhline(win, 8, 2, ACS_HLINE, 16);
-    mvwaddch(win, 8, 18, ACS_URCORNER);
+    mvwhline(win, 8, 2, ACS_HLINE, 26);
+    mvwaddch(win, 8, 28, ACS_URCORNER);
     mvwaddch(win, 9, 1, ACS_VLINE);
-    mvwaddch(win, 9, 18, ACS_VLINE);
+    mvwaddch(win, 9, 28, ACS_VLINE);
     mvwaddch(win, 10, 1, ACS_LLCORNER);
-    mvwhline(win, 10, 2, ACS_HLINE, 16);
-    mvwaddch(win, 10, 18, ACS_LRCORNER);
+    mvwhline(win, 10, 2, ACS_HLINE, 26);
+    mvwaddch(win, 10, 28, ACS_LRCORNER);
 }
 
 void SearchScreen::refresh()
@@ -56,6 +59,9 @@ void SearchScreen::refresh()
         mvwaddch(win, 5, 2, 'x');
         break;
     }
+
+    // Texto de pesquisa
+    mvwprintw(win, 9, 2, displaytext);
 
     if(win) wrefresh(win);
 }
@@ -81,8 +87,50 @@ void SearchScreen::update()
             ordertype = 2;
             this->refresh();
             break;
+
+        case 8:
+            if(charnum > 0)
+            {
+                findtext[charnum - 1] = '\0';
+                charnum--;
+            }
+            cleardisplaytext();
+            refreshdisplaytext();
+            this->refresh();
+            break;
+
+        case '\t': break; // Apenas para evitar input de TAB.
+
+        default:
+            if(charnum < 255)
+            {
+                findtext[charnum] = ch;
+                charnum++;
+            }
+            cleardisplaytext();
+            refreshdisplaytext();
+            this->refresh();
+            break;
         case 10:
             return;
         }
     }
+}
+
+void SearchScreen::refreshdisplaytext()
+{
+    if(strlen(findtext) < 25)
+        strcpy(displaytext, findtext);
+    else
+    {
+        for(int i = 25; i > 0; i--)
+            displaytext[i] = findtext[i + (strlen(findtext) - 25)];
+        displaytext[0] = '<';
+    }
+}
+
+void SearchScreen::cleardisplaytext()
+{
+    for(int i = 2; i <= 26; i++)
+        mvwprintw(win, 9, i, " ");
 }

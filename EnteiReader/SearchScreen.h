@@ -4,7 +4,7 @@
 #include "stdafx.h"
 
 #define SEARCHSCREEN_SIZE_Y      12
-#define SEARCHSCREEN_SIZE_X      20
+#define SEARCHSCREEN_SIZE_X      30
 #define SEARCHSCREEN_UTILSIZE_Y   8
 #define SEARCHSCREEN_UTILSIZE_X  18
 
@@ -13,10 +13,12 @@ class SearchScreen
 private:
     WINDOW* win;
     int ch;
-    int selection;
-    int ordertype;
+    int selection, ordertype, charnum;
     char findtext[255];
-    char displaytext[15];
+    char displaytext[25];
+
+    void refreshdisplaytext();
+    void cleardisplaytext();
 public:
     SearchScreen();
     void init();

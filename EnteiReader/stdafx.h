@@ -13,4 +13,13 @@
 #include <stdlib.h>
 #include <string.h>
 
+// Delegate da tela de menus
+#define MENU_READER  0
+#define MENU_LIBRARY 1
+#define MENU_SEARCH  2
+typedef int MENUTYPE;
+
+extern void (*showcontrols)(MENUTYPE);
+
+
 #endif // STDAFX_H_INCLUDED

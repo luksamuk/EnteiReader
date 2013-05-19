@@ -34,7 +34,7 @@ void LibScreen::init()
     // Algo maior que isso é reduzido para 55 caracteres + "...\0".
 
     // Experimental:
-    n_books = 6;
+    n_books = 7;
     books = new char*[n_books];
     for(int i = 0; i < n_books; i++)
         books[i] = new char[255];
@@ -44,6 +44,7 @@ void LibScreen::init()
     strcpy(books[3], "fallofreach.epub");
     strcpy(books[4], "ghostonyx.epub");
     strcpy(books[5], "justforfun.epub");
+    strcpy(books[6], "levelup.epub");
     for(int i = 0; i < n_books; i++)
         clipFilename(books[i]);
 }
@@ -67,9 +68,11 @@ int LibScreen::update()
             this->refresh();
             break;
         case KEY_F(3):   // Pesquisa & Ordem
+            (*showcontrols)(MENU_SEARCH); // Exibe os controles de busca
             srchscr->init();
             srchscr->refresh();
             srchscr->update(); // TODO: Realizar a pesquisa/ordenação.
+            (*showcontrols)(MENU_LIBRARY); // Exibe os controles de biblioteca
             this->init();
             this->refresh();
             break;
@@ -119,6 +122,10 @@ void LibScreen::refresh()
         strcpy(b_author, "Linus Torvalds");
         strcpy(b_publisher, "Harpercollins USA");
         break;
+    case 6:
+        strcpy(b_name, "Level Up - Um Guia para o Design de Grandes Jogos");
+        strcpy(b_author, "Scott Rogers");
+        strcpy(b_publisher, "Blutcher");
     }
 
     for(int i = 0; i < n_books; i++)
@@ -175,6 +182,6 @@ void LibScreen::clipAttribute(char attribute[])
 
 void LibScreen::clearAttributeField(int linnum)
 {
-    for(int i = 1; i < LIBSCREEN_ATTRFIELD_UTILSIZE; i++)
+    for(int i = 1; i <= LIBSCREEN_ATTRFIELD_UTILSIZE; i++)
         mvwprintw(attributes, linnum, i, " ");
 }

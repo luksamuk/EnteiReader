@@ -5,6 +5,7 @@
 // Prompt de comando tem tamanho 25x80.
 
 WINDOW* controls;
+void (*showcontrols)(MENUTYPE);
 
 void mostra_controles(int);
 void pair_colors(void);
@@ -22,7 +23,7 @@ int main()
     curs_set(0);
 
     if(has_colors()) pair_colors();
-
+    showcontrols = &mostra_controles;
     controls = newwin(0, 80, 24, 0);
     libscr = new LibScreen();
     readscr = new ReadScreen();
@@ -46,7 +47,7 @@ int main()
     }
 }
 
-void mostra_controles(int tipodemenu)
+void mostra_controles(MENUTYPE tipodemenu)
 {
     // Limpa a caixa de controles
     for(int i = 0; i < COLS; i++)
@@ -54,7 +55,7 @@ void mostra_controles(int tipodemenu)
 
     switch(tipodemenu)
     {
-    case 0: // Leitor
+    case MENU_READER: // Leitor
         wattron(controls, A_REVERSE);
         mvwprintw(controls, 0, 0, "ESC");
         wattroff(controls, A_REVERSE);
@@ -70,7 +71,7 @@ void mostra_controles(int tipodemenu)
         wattroff(controls, A_REVERSE);
         mvwprintw(controls, 0, 34, "Abrir outro livro");
         break;
-    case 1: // Biblioteca
+    case MENU_LIBRARY: // Biblioteca
         wattron(controls, A_REVERSE);
         mvwprintw(controls, 0, 0, "ESC");
         wattroff(controls, A_REVERSE);
@@ -96,7 +97,7 @@ void mostra_controles(int tipodemenu)
         wattroff(controls, A_REVERSE);
         mvwprintw(controls, 0, 68, "Pesq./Ordem");
         break;
-    case 2: // Janela de pesquisa
+    case MENU_SEARCH: // Janela de pesquisa
         wattron(controls, A_REVERSE);
         mvwprintw(controls, 0, 0, "F2");
         wattroff(controls, A_REVERSE);
