@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 #include "SearchScreen.h"
+#include "Vigil.h"
 
 #define LIBSCREEN_FILESFIELD_SIZE          30
 #define LIBSCREEN_FILESFIELD_UTILSIZE      (LIBSCREEN_FILESFIELD_SIZE - 2)
@@ -15,7 +16,7 @@
 class LibScreen
 {
 private:
-    //Vigil* vigil;
+    Vigil* vigil;
     WINDOW* win, *attributes;
     int selection, n_books;
     int ch;
@@ -31,6 +32,7 @@ private:
     void clearAttributeField(int);
 public:
     LibScreen();
+    ~LibScreen();
     void init();
     int update();
     void refresh();

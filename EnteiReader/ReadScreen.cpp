@@ -34,6 +34,7 @@ void ReadScreen::update()
             return;
         case 27:       // Sair
             endwin();
+            (*killall)();
             exit(0);
             break;
         }

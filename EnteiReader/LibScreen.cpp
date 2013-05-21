@@ -9,6 +9,34 @@ LibScreen::LibScreen() // TODO: add param Vigil* vigilante
     win        = newwin(24, LIBSCREEN_FILESFIELD_SIZE, 0, 0);
     attributes = newwin(24, LIBSCREEN_ATTRFIELD_SIZE, 0, LIBSCREEN_FILESFIELD_SIZE);
     srchscr    = new SearchScreen();
+
+    vigil = new Vigil();
+
+    vigil->addDir("./");
+    vigil->addDir("./Books/");
+    vigil->update(false);
+
+    books = new char*[n_books];
+    n_books = vigil->filesCount();
+
+    Vigil::fileIndex* file = vigil->library();
+
+    if(file != NULL)
+    {
+        for(int i = 0; i < n_books; i++)
+        {
+            books[i] = new char[255];
+            sprintf(books[i], "%s", file->fileAddress);
+            clipFilename(books[i]);
+            file = file->next;
+        }
+    }
+}
+
+LibScreen::~LibScreen()
+{
+    vigil->~Vigil();
+    delete vigil;
 }
 
 void LibScreen::init()
@@ -27,26 +55,6 @@ void LibScreen::init()
     mvwprintw(attributes, 4, 1, "AUTOR");
     mvwprintw(attributes, 7, 1, "EDITORA");
     if(has_colors()) wattroff(attributes, COLOR_PAIR(1));
-
-    //TODO: adicionar e formatar nomes dos livros.
-    //n_books = vigil->filesCount();
-    //Área útil do nome dos livros: 58 caracteres.
-    // Algo maior que isso é reduzido para 55 caracteres + "...\0".
-
-    // Experimental:
-    n_books = 7;
-    books = new char*[n_books];
-    for(int i = 0; i < n_books; i++)
-        books[i] = new char[255];
-    strcpy(books[0], "lipsum.epub");
-    strcpy(books[1], "brownfox.epub");
-    strcpy(books[2], "brascubas.epub");
-    strcpy(books[3], "fallofreach.epub");
-    strcpy(books[4], "ghostonyx.epub");
-    strcpy(books[5], "justforfun.epub");
-    strcpy(books[6], "levelup.epub");
-    for(int i = 0; i < n_books; i++)
-        clipFilename(books[i]);
 }
 
 int LibScreen::update()
@@ -81,6 +89,7 @@ int LibScreen::update()
             break;
         case 27:         // Sair
             endwin();
+            (*killall)();
             exit(0);
             break;
         }
@@ -92,40 +101,11 @@ void LibScreen::refresh()
     // Diferencia atributos. TESTE!!!
     switch(selection)
     {
-    case 0:
+    default:
         strcpy(b_name, "Lorem Ipsum");
         strcpy(b_author, "Domínio Público");
         strcpy(b_publisher, "Domínio Público");
         break;
-    case 1:
-        strcpy(b_name, "The Quick Brown Fox Jumps Over The Lazy Dog");
-        strcpy(b_author, "Domínio Público");
-        strcpy(b_publisher, "Domínio Público");
-        break;
-    case 2:
-        strcpy(b_name, "Memórias Póstumas de Brás Cubas");
-        strcpy(b_author, "Machado de Assis");
-        strcpy(b_publisher, "Elevação");
-        break;
-    case 3:
-        strcpy(b_name, "The Fall of Reach");
-        strcpy(b_author, "Eric Nylund");
-        strcpy(b_publisher, "TOR");
-        break;
-    case 4:
-        strcpy(b_name, "Ghosts of Onyx");
-        strcpy(b_author, "Eric Nylund");
-        strcpy(b_publisher, "TOR");
-        break;
-    case 5:
-        strcpy(b_name, "Just For Fun");
-        strcpy(b_author, "Linus Torvalds");
-        strcpy(b_publisher, "Harpercollins USA");
-        break;
-    case 6:
-        strcpy(b_name, "Level Up - Um Guia para o Design de Grandes Jogos");
-        strcpy(b_author, "Scott Rogers");
-        strcpy(b_publisher, "Blutcher");
     }
 
     for(int i = 0; i < n_books; i++)
@@ -160,6 +140,24 @@ void LibScreen::printMenuElement(const char* text, int order)
 
 void LibScreen::clipFilename(char filename[])
 {
+    char aux[255];
+    int i = strlen(filename), j = 0;
+
+    // Extrai o nome do arquivo
+    while(true)
+    {
+        if(filename[i] != '/') i--;
+        else break;
+    }
+    while(i != strlen(filename))
+    {
+        i++;
+        aux[j] = filename[i];
+        j++;
+    }
+    aux[j] = '\0';
+    strcpy(filename, aux);
+
     if(strlen(filename) > LIBSCREEN_FILESFIELD_UTILSIZE - 1)
     {
         filename[LIBSCREEN_FILESFIELD_UTILSIZE]     = '\0';

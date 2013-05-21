@@ -20,6 +20,7 @@
 typedef int MENUTYPE;
 
 extern void (*showcontrols)(MENUTYPE);
+extern void (*killall) (void);
 
 
 #endif // STDAFX_H_INCLUDED

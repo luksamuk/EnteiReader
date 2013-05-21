@@ -6,9 +6,11 @@
 
 WINDOW* controls;
 void (*showcontrols)(MENUTYPE);
+void (*killall)(void);
 
 void mostra_controles(int);
 void pair_colors(void);
+void KillAll(void);
 LibScreen*  libscr;
 ReadScreen* readscr;
 
@@ -24,6 +26,7 @@ int main()
 
     if(has_colors()) pair_colors();
     showcontrols = &mostra_controles;
+    killall = &KillAll;
     controls = newwin(0, 80, 24, 0);
     libscr = new LibScreen();
     readscr = new ReadScreen();
@@ -128,4 +131,10 @@ void pair_colors(void)
 {
     start_color();
     init_pair(1, COLOR_RED, COLOR_BLACK);
+}
+
+void KillAll(void)
+{
+    delete libscr;
+    delete readscr;
 }
