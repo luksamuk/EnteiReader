@@ -2,7 +2,7 @@
 #include "LibScreen.h"
 #include "ReadScreen.h"
 
-// Prompt de comando tem tamanho 25x80.
+// Prompt de comando tem tamanho 24x80.
 
 WINDOW* controls;
 void (*showcontrols)(MENUTYPE);
@@ -27,7 +27,7 @@ int main()
     if(has_colors()) pair_colors();
     showcontrols = &mostra_controles;
     killall = &KillAll;
-    controls = newwin(0, 80, 24, 0);
+    controls = newwin(0, 80, 23, 0);
     libscr = new LibScreen();
     readscr = new ReadScreen();
 

@@ -88,7 +88,7 @@ void SearchScreen::update()
             this->refresh();
             break;
 
-        case 8:
+        case KEY_BACKSPACE:
             if(charnum > 0)
             {
                 findtext[charnum - 1] = '\0';
@@ -99,7 +99,9 @@ void SearchScreen::update()
             this->refresh();
             break;
 
-        case '\t': break; // Apenas para evitar input de TAB.
+        case '\t': // Apenas para evitar input errado.
+        case KEY_F(1):
+        break;
 
         default:
             if(charnum < 255)

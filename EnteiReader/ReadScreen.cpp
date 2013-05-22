@@ -5,10 +5,10 @@ ReadScreen::ReadScreen()
     selection = 0;
 
     // Janela de leitura
-    reader = newwin(24, 50, 0, 0);
+    reader = newwin(23, 50, 0, 0);
 
     // Janela de índice
-    index = newwin(24, 30, 0, 50);
+    index = newwin(23, 30, 0, 50);
 }
 
 void ReadScreen::init()

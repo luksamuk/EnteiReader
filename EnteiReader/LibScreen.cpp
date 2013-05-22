@@ -6,8 +6,8 @@ LibScreen::LibScreen() // TODO: add param Vigil* vigilante
     //vigil = vigilante;
 
     // Inicializa a janela
-    win        = newwin(24, LIBSCREEN_FILESFIELD_SIZE, 0, 0);
-    attributes = newwin(24, LIBSCREEN_ATTRFIELD_SIZE, 0, LIBSCREEN_FILESFIELD_SIZE);
+    win        = newwin(23, LIBSCREEN_FILESFIELD_SIZE, 0, 0);
+    attributes = newwin(23, LIBSCREEN_ATTRFIELD_SIZE, 0, LIBSCREEN_FILESFIELD_SIZE);
     srchscr    = new SearchScreen();
 
     vigil = new Vigil();
