@@ -87,7 +87,7 @@ void SearchScreen::update()
             ordertype = 2;
             this->refresh();
             break;
-
+        case 8:
         case KEY_BACKSPACE:
             if(charnum > 0)
             {
