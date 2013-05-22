@@ -21,7 +21,16 @@ private:
     int selection, n_books;
     int ch;
 
-    char** books;
+    struct Book
+    {
+        char* filename;
+        char* filepath;
+        char* title;
+        char* author;
+        char* publisher;
+    };
+
+    Book* books;
     char b_name[255], b_author[48], b_publisher[48];
 
     SearchScreen* srchscr;

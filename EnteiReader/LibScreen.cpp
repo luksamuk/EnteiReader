@@ -3,8 +3,6 @@
 LibScreen::LibScreen() // TODO: add param Vigil* vigilante
 {
     selection = 0;
-    //vigil = vigilante;
-
     // Inicializa a janela
     win        = newwin(23, LIBSCREEN_FILESFIELD_SIZE, 0, 0);
     attributes = newwin(23, LIBSCREEN_ATTRFIELD_SIZE, 0, LIBSCREEN_FILESFIELD_SIZE);
@@ -12,11 +10,11 @@ LibScreen::LibScreen() // TODO: add param Vigil* vigilante
 
     vigil = new Vigil();
 
-    vigil->addDir("./");
-    vigil->addDir("./Books/");
+    vigil->addDir(".");
+    vigil->addDir("./Books");
     vigil->update(false);
 
-    books = new char*[n_books];
+    books = new Book[n_books];
     n_books = vigil->filesCount();
 
     Vigil::fileIndex* file = vigil->library();
@@ -25,9 +23,11 @@ LibScreen::LibScreen() // TODO: add param Vigil* vigilante
     {
         for(int i = 0; i < n_books; i++)
         {
-            books[i] = new char[255];
-            sprintf(books[i], "%s", file->fileAddress);
-            clipFilename(books[i]);
+            books[i].filename = new char[255];
+            books[i].filepath = new char[255];
+            sprintf(books[i].filename, "%s", file->fileAddress);
+            sprintf(books[i].filepath, "%s", file->fileAddress);
+            clipFilename(books[i].filename);
             file = file->next;
         }
     }
@@ -85,7 +85,14 @@ int LibScreen::update()
             this->refresh();
             break;
         case 10:         // Selecionar livro
-            return selection;
+            if(n_books > 0)
+            {
+                endwin();
+                vigil->openFile(books[selection].filepath, true);
+                reset_prog_mode();
+                refresh();
+                return selection;
+            }
             break;
         case 27:         // Sair
             endwin();
@@ -109,7 +116,7 @@ void LibScreen::refresh()
     }
 
     for(int i = 0; i < n_books; i++)
-        printMenuElement(books[i], i);
+        printMenuElement(books[i].filename, i);
 
     if(win)        wrefresh(win);
     if(attributes) wrefresh(attributes);

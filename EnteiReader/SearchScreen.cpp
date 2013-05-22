@@ -9,6 +9,7 @@ SearchScreen::SearchScreen()
     win = newwin(SEARCHSCREEN_SIZE_Y, SEARCHSCREEN_SIZE_X,
                  12 - (SEARCHSCREEN_SIZE_Y / 2),
                  40 - (SEARCHSCREEN_SIZE_X / 2));
+    if(has_colors()) wbkgd(win, COLOR_PAIR(2));
     strcpy(displaytext, "_");
 }
 

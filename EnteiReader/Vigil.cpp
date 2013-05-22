@@ -63,7 +63,7 @@ bool Vigil::openFile(const char * file, bool overwrite)
     char cmd[cmdSize];
     char * execute;
     if(sys == LINUX)
-        execute = "7za x ";
+        execute = "./7za x ";
 
     else if(sys == WINDOWS)
         execute = "7za.exe x ";
@@ -176,6 +176,7 @@ Vigil::Vigil()
     totalCount = 0;
     recoverLib();
     system("mkdir temp");
+    if(sys == LINUX) system("chmod +x 7za flightcrew-cli");
 }
 Vigil::~Vigil()
 {

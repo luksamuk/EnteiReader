@@ -118,6 +118,7 @@ void pair_colors(void)
 {
     start_color();
     init_pair(1, COLOR_RED, COLOR_BLACK);
+    init_pair(2, COLOR_WHITE, COLOR_BLUE);
 }
 
 void KillAll(void)
