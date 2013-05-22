@@ -2,12 +2,12 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6" />
 	<Project>
-		<Option title="EnteiReader" />
+		<Option title="EnteiReaderLinux" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Debug">
-				<Option output="bin/Debug/EnteiReader" prefix_auto="1" extension_auto="1" />
+				<Option output="bin/Debug/EnteiReaderLinux" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
@@ -15,11 +15,11 @@
 					<Add option="-g" />
 				</Compiler>
 				<Linker>
-					<Add library="pdcurses" />
+					<Add library="ncurses" />
 				</Linker>
 			</Target>
 			<Target title="Release">
-				<Option output="bin/Release/EnteiReader" prefix_auto="1" extension_auto="1" />
+				<Option output="bin/Release/EnteiReaderLinux" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Release/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
@@ -33,10 +33,8 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
-			<Add option="-fexceptions" />
 		</Compiler>
-		<Unit filename="7za.exe" />
-		<Unit filename="FlightCrew-cli.exe" />
+		<Unit filename="7za" />
 		<Unit filename="LibScreen.cpp" />
 		<Unit filename="LibScreen.h" />
 		<Unit filename="ReadScreen.cpp" />
@@ -45,12 +43,11 @@
 		<Unit filename="SearchScreen.h" />
 		<Unit filename="Vigil.cpp" />
 		<Unit filename="Vigil.h" />
+		<Unit filename="flightcrew-cli" />
 		<Unit filename="main.cpp" />
-		<Unit filename="pdcurses.dll" />
 		<Unit filename="stdafx.h" />
 		<Extensions>
 			<code_completion />
-			<envvars />
 			<debugger />
 		</Extensions>
 	</Project>
