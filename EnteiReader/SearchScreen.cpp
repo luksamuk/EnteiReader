@@ -9,6 +9,7 @@ SearchScreen::SearchScreen()
     win = newwin(SEARCHSCREEN_SIZE_Y, SEARCHSCREEN_SIZE_X,
                  12 - (SEARCHSCREEN_SIZE_Y / 2),
                  40 - (SEARCHSCREEN_SIZE_X / 2));
+    strcpy(displaytext, "_");
 }
 
 void SearchScreen::init()
@@ -129,10 +130,12 @@ void SearchScreen::refreshdisplaytext()
             displaytext[i] = findtext[i + (strlen(findtext) - 25)];
         displaytext[0] = '<';
     }
+
+    if(strlen(findtext) < 255) strcat(displaytext, "_");
 }
 
 void SearchScreen::cleardisplaytext()
 {
-    for(int i = 2; i <= 26; i++)
+    for(int i = 2; i <= 27; i++)
         mvwprintw(win, 9, i, " ");
 }

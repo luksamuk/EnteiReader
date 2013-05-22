@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "LibScreen.h"
 #include "ReadScreen.h"
-
 // Prompt de comando tem tamanho 24x80.
 
 WINDOW* controls;
@@ -16,8 +15,6 @@ ReadScreen* readscr;
 
 int main()
 {
-    int ch;
-
     initscr();
     cbreak();
     noecho();
@@ -81,24 +78,14 @@ void mostra_controles(MENUTYPE tipodemenu)
         mvwprintw(controls, 0, 4, "Sair");
 
         wattron(controls, A_REVERSE);
-        mvwprintw(controls, 0, 10, "CIMA/BAIXO");
+        mvwprintw(controls, 0, 10, "F2");
         wattroff(controls, A_REVERSE);
-        mvwprintw(controls, 0, 22, "Escolher");
+        mvwprintw(controls, 0, 14, "Gerenciar");
 
         wattron(controls, A_REVERSE);
-        mvwprintw(controls, 0, 32, "ENTER");
+        mvwprintw(controls, 0, 25, "F3");
         wattroff(controls, A_REVERSE);
-        mvwprintw(controls, 0, 38, "Selecionar");
-
-        wattron(controls, A_REVERSE);
-        mvwprintw(controls, 0, 50, "F2");
-        wattroff(controls, A_REVERSE);
-        mvwprintw(controls, 0, 53, "Gerenciar");
-
-        wattron(controls, A_REVERSE);
-        mvwprintw(controls, 0, 64, "F3");
-        wattroff(controls, A_REVERSE);
-        mvwprintw(controls, 0, 68, "Pesq./Ordem");
+        mvwprintw(controls, 0, 29, "Pesquisa & Ordem");
         break;
     case MENU_SEARCH: // Janela de pesquisa
         wattron(controls, A_REVERSE);
