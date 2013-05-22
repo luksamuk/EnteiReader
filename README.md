@@ -11,10 +11,10 @@ e pode ser aberto utilizando a IDE Code::Blocks.
 
 TODO:
 
-[x] Inserir gerenciador e manipulador de bibliotecas de ePubs (VIGIL)
-[x] Inserir extração de arquivos dos ePubs
-[ ] Extrair informações dos epubs e guardar em árvores
-[ ] Adicionar extração de capítulos
-[ ] Adicionar leitura de texto por capítulo
-[ ] Adicionar seleção de capítulos
-[ ] Adicionar leitura de texto com rolagem
+- [x] Inserir gerenciador e manipulador de bibliotecas de ePubs (VIGIL)
+- [x] Inserir extração de arquivos dos ePubs
+- [ ] Extrair informações dos epubs e guardar em árvores
+- [ ] Adicionar extração de capítulos
+- [ ] Adicionar leitura de texto por capítulo
+- [ ] Adicionar seleção de capítulos
+- [ ] Adicionar leitura de texto com rolagem
