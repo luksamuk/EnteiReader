@@ -1,6 +1,6 @@
 #include "LibScreen.h"
 
-LibScreen::LibScreen() // TODO: add param Vigil* vigilante
+LibScreen::LibScreen()
 {
     selection = 0;
     // Inicializa a janela
