@@ -87,10 +87,7 @@ int LibScreen::update()
         case 10:         // Selecionar livro
             if(n_books > 0)
             {
-                endwin();
                 vigil->openFile(books[selection].filepath, true);
-                reset_prog_mode();
-                refresh();
                 return selection;
             }
             break;

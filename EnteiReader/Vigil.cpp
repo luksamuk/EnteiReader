@@ -71,7 +71,7 @@ bool Vigil::openFile(const char * file, bool overwrite)
     else
         return false;
 
-    sprintf(cmd, "%s%s -y -o%s", execute, file, dest);
+    sprintf(cmd, "%s%s -y -o%s > nul", execute, file, dest);
 
     if(!system(cmd)) return true;
     return false;
