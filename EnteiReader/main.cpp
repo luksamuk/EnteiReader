@@ -6,10 +6,14 @@
 WINDOW* controls;
 void (*showcontrols)(MENUTYPE);
 void (*killall)(void);
+void (*clearscr)(void);
 
 void mostra_controles(int);
 void pair_colors(void);
 void KillAll(void);
+void ClearScr(void);
+
+Vigil* vigil;
 LibScreen*  libscr;
 ReadScreen* readscr;
 
@@ -24,6 +28,7 @@ int main()
     if(has_colors()) pair_colors();
     showcontrols = &mostra_controles;
     killall = &KillAll;
+    clearscr = &ClearScr;
     controls = newwin(0, 80, 23, 0);
     libscr = new LibScreen();
     readscr = new ReadScreen();
@@ -110,6 +115,12 @@ void mostra_controles(MENUTYPE tipodemenu)
 
         mvwprintw(controls, 0, 62, "Digite a pesquisa.");
         break;
+    case MENU_MANAGE:
+        wattron(controls, A_REVERSE);
+        mvwprintw(controls, 0, 0, "ENTER");
+        wattroff(controls, A_REVERSE);
+        mvwprintw(controls, 0, 7, "Voltar");
+        break;
     }
     wrefresh(controls);
 }
@@ -125,4 +136,12 @@ void KillAll(void)
 {
     delete libscr;
     delete readscr;
+}
+
+void ClearScr(void)
+{
+    for(int i = 0; i < COLS; i++)
+        for(int j = 0; j < LINES; j++)
+            mvprintw(j, i, " ");
+    refresh();
 }

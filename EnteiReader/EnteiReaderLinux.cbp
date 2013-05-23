@@ -37,6 +37,8 @@
 		<Unit filename="7za" />
 		<Unit filename="LibScreen.cpp" />
 		<Unit filename="LibScreen.h" />
+		<Unit filename="ManageScreen.cpp" />
+		<Unit filename="ManageScreen.h" />
 		<Unit filename="ReadScreen.cpp" />
 		<Unit filename="ReadScreen.h" />
 		<Unit filename="SearchScreen.cpp" />

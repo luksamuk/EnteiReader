@@ -7,6 +7,7 @@ LibScreen::LibScreen()
     win        = newwin(23, LIBSCREEN_FILESFIELD_SIZE, 0, 0);
     attributes = newwin(23, LIBSCREEN_ATTRFIELD_SIZE, 0, LIBSCREEN_FILESFIELD_SIZE);
     srchscr    = new SearchScreen();
+    mngscr     = new ManageScreen();
 
     vigil = new Vigil();
 
@@ -14,23 +15,7 @@ LibScreen::LibScreen()
     vigil->addDir("./Books");
     vigil->update(false);
 
-    books = new Book[n_books];
-    n_books = vigil->filesCount();
-
-    Vigil::fileIndex* file = vigil->library();
-
-    if(file != NULL)
-    {
-        for(int i = 0; i < n_books; i++)
-        {
-            books[i].filename = new char[255];
-            books[i].filepath = new char[255];
-            sprintf(books[i].filename, "%s", file->fileAddress);
-            sprintf(books[i].filepath, "%s", file->fileAddress);
-            clipFilename(books[i].filename);
-            file = file->next;
-        }
-    }
+    getBookList();
 }
 
 LibScreen::~LibScreen()
@@ -75,11 +60,26 @@ int LibScreen::update()
             if(selection < 0) selection = n_books - 1;
             this->refresh();
             break;
+        case KEY_F(2):
+            (*showcontrols)(MENU_MANAGE);
+            mngscr->init();
+            mngscr->refresh();
+            mngscr->update();
+            delBookList();
+            delete books;
+            getBookList();
+            (*showcontrols)(MENU_LIBRARY);
+            this->init();
+            this->refresh();
+            break;
         case KEY_F(3):   // Pesquisa & Ordem
             (*showcontrols)(MENU_SEARCH); // Exibe os controles de busca
             srchscr->init();
             srchscr->refresh();
-            srchscr->update(); // TODO: Realizar a pesquisa/ordenação.
+            srchscr->update();
+
+            // TODO: Realizar a pesquisa/ordenação.
+
             (*showcontrols)(MENU_LIBRARY); // Exibe os controles de biblioteca
             this->init();
             this->refresh();
@@ -186,4 +186,36 @@ void LibScreen::clearAttributeField(int linnum)
 {
     for(int i = 1; i <= LIBSCREEN_ATTRFIELD_UTILSIZE; i++)
         mvwprintw(attributes, linnum, i, " ");
+}
+
+void LibScreen::getBookList(void)
+{
+    // Limpa a tela
+    for(int i = 3; i < 22; i++)
+        for(int j = 1; j < LIBSCREEN_ATTRFIELD_SIZE; j++)
+            mvwprintw(win, i, j, " ");
+
+    n_books = vigil->filesCount();
+    books = new Book[n_books];
+
+    Vigil::fileIndex* file = vigil->library();
+
+    if(file != NULL)
+    {
+        for(int i = 0; i < n_books; i++)
+        {
+            books[i].filename = new char[255];
+            books[i].filepath = new char[255];
+            sprintf(books[i].filename, "%s", file->fileAddress);
+            sprintf(books[i].filepath, "%s", file->fileAddress);
+            clipFilename(books[i].filename);
+            file = file->next;
+        }
+    }
+}
+
+void LibScreen::delBookList(void)
+{
+    selection = 0;
+    n_books = 0;
 }

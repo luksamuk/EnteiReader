@@ -3,7 +3,7 @@
 
 #include "stdafx.h"
 #include "SearchScreen.h"
-#include "Vigil.h"
+#include "ManageScreen.h"
 
 #define LIBSCREEN_FILESFIELD_SIZE          30
 #define LIBSCREEN_FILESFIELD_UTILSIZE      (LIBSCREEN_FILESFIELD_SIZE - 2)
@@ -16,7 +16,6 @@
 class LibScreen
 {
 private:
-    Vigil* vigil;
     WINDOW* win, *attributes;
     int selection, n_books;
     int ch;
@@ -34,11 +33,14 @@ private:
     char b_name[255], b_author[48], b_publisher[48];
 
     SearchScreen* srchscr;
+    ManageScreen* mngscr;
 
     void printMenuElement(const char*, int);
     void clipFilename(char[]);
     void clipAttribute(char[]);
     void clearAttributeField(int);
+    void getBookList(void);
+    void delBookList(void);
 public:
     LibScreen();
     ~LibScreen();

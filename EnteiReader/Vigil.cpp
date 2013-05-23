@@ -71,7 +71,7 @@ bool Vigil::openFile(const char * file, bool overwrite)
     else
         return false;
 
-    sprintf(cmd, "%s%s -y -o%s > nul", execute, file, dest);
+    sprintf(cmd, "%s%s -y -o%s > ./temp/nul", execute, file, dest);
 
     if(!system(cmd)) return true;
     return false;
@@ -84,7 +84,7 @@ bool Vigil::isValid(const char * filename)
     if(sys == WINDOWS)  strcpy(cmd, "flightcrew-cli.exe");
     else if (sys == LINUX) strcpy(cmd,"./flightcrew-cli");
 
-    sprintf(cmd, "%s %s", cmd, filename);
+    sprintf(cmd, "%s %s > ./temp/nul", cmd, filename);
 
     return (system(cmd) == 0) ? true : false;
 }
@@ -380,29 +380,4 @@ Vigil::fileIndex * Vigil::library()
     }
     return ret;
 }
-
-void Vigil::printinfo()
-{
-    printf("\n-----FILES------\n");
-    folder * aux = dirList;
-    node * naux  = NULL;
-
-    while(aux!=NULL)
-    {
-        printf("Directory: %s\n", aux->location);
-        naux = aux->files;
-        while(true)
-        {
-            if (naux == NULL) break;
-            printf("\t%s\n", naux->filename);
-            naux = naux->next;
-        }
-        printf("- %i Files available.\n\n",aux->fCount);
-        aux = aux->next;
-    }
-    printf("\n--Total number of monitored directories...: %i"
-           "\n-Total number of files currently addressed: %i\n\n", dirCount, totalCount);
-}
-
-
 
