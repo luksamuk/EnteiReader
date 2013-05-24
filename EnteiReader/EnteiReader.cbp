@@ -49,6 +49,8 @@
 		<Unit filename="Vigil.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="pdcurses.dll" />
+		<Unit filename="rapidxml.hpp" />
+		<Unit filename="rapidxml_print.hpp" />
 		<Unit filename="stdafx.h" />
 		<Extensions>
 			<code_completion />

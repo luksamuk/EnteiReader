@@ -14,12 +14,18 @@ private:
     int selection;
     int ch;
     ACTIVEWINDOW active;
+    void clearallscrs(void);
 
     int nchapters;
-    char** indexlist;
+    char** indexlist, **shownlist;
 
     void makeindex();
     void delindex();
+
+    // Criador de capitulos
+    char* endereco(void);
+    int n_capitulos(void);
+    void capitulos(char**&);
 public:
     ReadScreen();
     void init();

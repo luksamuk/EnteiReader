@@ -27,7 +27,7 @@ void ManageScreen::update()
         switch(ch)
         {
         case 10:
-            vigil->update();
+            vigil->update(false);
             (*clearscr)();
             return;
             break;

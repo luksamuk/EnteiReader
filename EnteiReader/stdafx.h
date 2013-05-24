@@ -10,9 +10,16 @@
     #include <panel.h>
 #endif
 
-#include <stdlib.h>
-#include <string.h>
+#include <cstdlib>
+#include <cstring>
+#include <cstdio>
+#include <fstream>
+#include <vector>
 #include "Vigil.h"
+#include "rapidxml.hpp"
+#include "rapidxml_print.hpp"
+using namespace std;
+using namespace rapidxml;
 
 // Delegate da tela de menus
 #define MENU_READER  0
