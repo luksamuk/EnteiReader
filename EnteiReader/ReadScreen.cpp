@@ -6,6 +6,9 @@ ReadScreen::ReadScreen()
     index = newwin(23, 30, 0, 50);
     indexlist = NULL;
     shownlist = NULL;
+    scroll_h = scroll_v = 0;
+
+    maxtextlines = maxtextcols = 0;
 }
 
 void ReadScreen::init()
@@ -34,7 +37,10 @@ void ReadScreen::init()
 
     // Janela de exibição
     mvwaddch(reader, 1, 48, ACS_UARROW);
-    mvwaddch(reader, 21, 48, ACS_DARROW);
+    mvwaddch(reader, 20, 48, ACS_DARROW);
+    mvwaddch(reader, 21, 1, ACS_LARROW);
+    mvwaddch(reader, 21, 47, ACS_RARROW);
+    mvwaddch(reader, 21, 48, ACS_BLOCK);
 
     // Cria o indice
     makeindex();
@@ -64,6 +70,14 @@ void ReadScreen::update()
         {
             switch(ch)
             {
+                case KEY_DOWN:
+                    break;
+                case KEY_UP:
+                    break;
+                case KEY_RIGHT:
+                    break;
+                case KEY_LEFT:
+                    break;
             }
         }
         else // active == WINDOW_INDEX
@@ -107,8 +121,8 @@ void ReadScreen::refresh()
     }
 
     // Leitor
-    // TAMANHO: 21x47, começando a partir de 1x1
-
+    // TAMANHO: 20x47, começando a partir de 1x1
+    updatescrollbars();
 
 
     if(reader) wrefresh(reader);
@@ -121,9 +135,20 @@ void ReadScreen::clearallscrs(void)
         for(int i = 0; i < 28; i++)
             mvwprintw(index, j + 3, i + 1, " ");
 
-    for(int j = 0; j < 21; j++)
+    for(int j = 0; j < 20; j++)
         for(int i = 0; i < 47; i++)
             mvwprintw(reader, j + 1, i + 1, " ");
+}
+
+void ReadScreen::updatescrollbars(void)
+{
+    for(int i = 2; i < 20; i++)
+        mvwprintw(reader, i, 48, " ");
+    for(int i = 2; i < 47; i++)
+        mvwprintw(reader, 21, i, " ");
+
+    mvwaddch(reader, 2 + scroll_v, 48, ACS_DIAMOND);
+    mvwaddch(reader, 21, 2 + scroll_h, ACS_DIAMOND);
 }
 
 void ReadScreen::makeindex()

@@ -13,8 +13,12 @@ private:
     WINDOW* reader, *index;
     int selection;
     int ch;
+    int scroll_h, scroll_v;
+    int maxtextlines;
+    int maxtextcols;
     ACTIVEWINDOW active;
     void clearallscrs(void);
+    void updatescrollbars(void);
 
     int nchapters;
     char** indexlist, **shownlist;
