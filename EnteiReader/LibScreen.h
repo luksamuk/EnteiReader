@@ -37,9 +37,23 @@ private:
         Node *esq;
     };
 
+    struct HashNode {
+        Node* ebook;
+        HashNode* next;
+    };
+
+    struct Resultado {
+        Node* ebook;
+        int relev;
+        Resultado* next;
+    };
+
     Book* books;
     Node* a;
     char b_name[255], b_author[48], b_publisher[48];
+    HashNode hv[1000];
+    int pesqtype;
+    char pesqtxt[255];
 
     SearchScreen* srchscr;
     ManageScreen* mngscr;
@@ -57,6 +71,16 @@ private:
 
     void insereElemento(Node*&, Book*, int);
     void printListRecursively(Node*);
+
+    void indexar (Node ebook, HashNode &hv);
+    void hash (Node ebook, HashNode hv[]);
+    void hresults (char autor[], HashNode hv);
+    void hsearch (char autor[], HashNode hv[]);
+
+    void inres (Node* tree, Resultado *&retorno, int relev);
+    void result (char tit[], Node* tree, Resultado *&retorno);
+    void tsearch (char tit[], Node* tree, Resultado *&retorno);
+
 public:
     LibScreen();
     ~LibScreen();

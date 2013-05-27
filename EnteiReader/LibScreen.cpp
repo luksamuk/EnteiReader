@@ -18,6 +18,12 @@ LibScreen::LibScreen()
     a = NULL;
 
     getBookList();
+
+    for (int i=0; i < 1000; i++)
+    {
+        hv[i].ebook = NULL;
+        hv[i].next = NULL;
+    }
 }
 
 LibScreen::~LibScreen()
@@ -79,9 +85,19 @@ int LibScreen::update()
             (*showcontrols)(MENU_SEARCH); // Exibe os controles de busca
             srchscr->init();
             srchscr->refresh();
-            srchscr->update();
+            pesqtype = srchscr->update(pesqtxt);
 
             // TODO: Realizar a pesquisa/ordenação.
+            switch(pesqtype)
+            {
+                // Notar que pesqtxt pode estar vazio.
+            case 0: // Por nome
+                break;
+            case 1: // Por autor
+                break;
+            case 2: // Por editora
+                break;
+            }
 
             (*showcontrols)(MENU_LIBRARY); // Exibe os controles de biblioteca
             this->init();
@@ -308,4 +324,111 @@ void LibScreen::insereElemento(Node *&a, Book* book, int bookid)
         insereElemento(a->dir, book, bookid);
         return;
     }
+}
+
+// Relativo à pesquisa por hash
+
+void LibScreen::indexar (Node ebook, HashNode &hv) {
+    if (hv.ebook == NULL) {hv.ebook = new Node; hv.ebook = &ebook;}
+    else indexar(ebook, *hv.next);
+    return;
+}
+
+void LibScreen::hash (Node ebook, HashNode hv[]) {
+    int i;
+    int index;
+    for(i = 0; i < 19; i++) {
+
+        index = 0;
+        for(i; i < 19; i++){
+        if (ebook.book->author[i] != ' ' && ebook.book->author[i] != '\0') {
+            index += int(ebook.book->author[i])*i;
+        }
+        else break;
+        }
+    indexar (ebook, hv[index%1000]);
+    if (ebook.book->author[i] == '\0') {break;}
+    }
+}
+
+void LibScreen::hresults (char autor[], HashNode hv) {
+
+    if (hv.ebook == NULL) return;
+    while(true){
+        int i= 0, c = 0;
+
+        while (c < strlen(autor)){
+            if (autor[c] == hv.ebook->book->author[i]) {i++; c++;}
+            else if (autor[c] != hv.ebook->book->author[i]) {c = 0; i++;}
+        }
+        hresults(autor, *hv.next);
+        }
+}
+
+void LibScreen::hsearch (char autor[], HashNode hv[]) {
+
+    int i;
+    int index;
+
+    index = 0;
+    for(int i = 0; i < 19; i++){
+        if (autor[i] != ' ' && autor[i] != '\0') {
+            index += int(autor[i])*i;
+        }
+        else break;
+        }
+    hresults(autor, hv[index%1000]);
+}
+
+
+void LibScreen::inres (Node* tree, Resultado *&retorno, int relev) {
+
+    if (retorno == NULL) {retorno->ebook = tree; retorno->relev = relev; return;}
+
+    while(true) {
+        if (retorno == NULL || relev > retorno->relev) break;
+        retorno = retorno->next;}
+    if (retorno == NULL) {retorno->ebook = tree; retorno->relev = relev; return;}
+    retorno->next = retorno;
+    retorno->ebook = tree; retorno->relev = relev;
+    return;
+}
+
+
+void LibScreen::result (char tit[], Node* tree, Resultado *&retorno) {
+
+    if (strcmp(tit, tree->book->title) == 0) {inres(tree, retorno, 999); return;}
+    bool flag=false;
+    for (int i=0; i<strlen(tit); i++){
+        if (tit[i] == ' ') flag=true;}
+    if (!flag) {inres(tree, retorno, 0); return;}
+
+    int relev=100, j=0;
+    for (int i=0; i<strlen(tit); i++){
+        while(true){
+            if (tit[i]==tree->book->title[j]) {j++; break;}
+            if (tit[i]!=tree->book->title[j]) {j++; relev--;}
+            if (tit[i]==' ') break;
+        }
+        if (tree->book->title[j]=='\0') break;
+    }
+    inres(tree, retorno, relev);
+}
+
+void LibScreen::tsearch (char tit[], Node* tree, Resultado *&retorno) {
+
+    if (tree = NULL) return;
+
+    tsearch(tit, tree->esq, retorno);
+    bool flag;
+    int i=0, c=0;
+    while(true) {
+        flag=true;
+        while(true){
+            if (tit[c] == ' ' || tit[c] == '\0') break;
+            if (tit[c] != tree->book->title[i]){flag = false; c=0; break;}
+            i++; c++;}
+        if (flag) {result(tit, tree, retorno); break;}
+    }
+    tsearch(tit, tree->dir, retorno);
 }

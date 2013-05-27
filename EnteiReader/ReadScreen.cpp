@@ -40,7 +40,6 @@ void ReadScreen::init()
     mvwaddch(reader, 20, 48, ACS_DARROW);
     mvwaddch(reader, 21, 1, ACS_LARROW);
     mvwaddch(reader, 21, 47, ACS_RARROW);
-    mvwaddch(reader, 21, 48, ACS_BLOCK);
 
     // Cria o indice
     makeindex();
@@ -241,10 +240,10 @@ void ReadScreen::capitulos(char** &c)
 
 void ReadScreen::getText()
 {
-    xml_document<> doc;
-    xml_node<> *node = doc.first_node("package");
-    char* end;
-    ifstream menu(indexlist[selection]);
-    end = print(text[0], doc, 0);
-    doc.parse<0>(&text[0][0]);
+    //xml_document<> doc;
+    //xml_node<> *node = doc.first_node("package");
+    //char* end;
+    //ifstream menu(indexlist[selection]);
+    //end = print(text[0], doc, 0);
+    //doc.parse<0>(&text[0][0]);
 }

@@ -22,7 +22,7 @@ private:
 public:
     SearchScreen();
     void init();
-    void update();
+    int update(char*);
     void refresh();
 };
 

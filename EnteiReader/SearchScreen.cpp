@@ -68,7 +68,7 @@ void SearchScreen::refresh()
     if(win) wrefresh(win);
 }
 
-void SearchScreen::update()
+int SearchScreen::update(char* pesq)
 {
     this->refresh();
     while(true)
@@ -116,7 +116,8 @@ void SearchScreen::update()
             this->refresh();
             break;
         case 10:
-            return;
+            sprintf(pesq, "%s", findtext);
+            return ordertype;
         }
     }
 }
