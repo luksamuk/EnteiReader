@@ -18,7 +18,7 @@ class LibScreen
 private:
     WINDOW* win, *attributes;
     int selection, n_books;
-    int ch;
+    int ch, curr_elem;
 
     struct Book
     {
@@ -29,7 +29,16 @@ private:
         char* publisher;
     };
 
+    struct Node
+    {
+        int bookid;
+        Book* book;
+        Node *dir;
+        Node *esq;
+    };
+
     Book* books;
+    Node* a;
     char b_name[255], b_author[48], b_publisher[48];
 
     SearchScreen* srchscr;
@@ -41,6 +50,13 @@ private:
     void clearAttributeField(int);
     void getBookList(void);
     void delBookList(void);
+
+    char* getTitulo(char*);
+    char* getAutores(char*);
+    char* getEditora(char*);
+
+    void insereElemento(Node*&, Book*, int);
+    void printListRecursively(Node*);
 public:
     LibScreen();
     ~LibScreen();

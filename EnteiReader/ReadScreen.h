@@ -22,9 +22,12 @@ private:
 
     int nchapters;
     char** indexlist, **shownlist;
+    char text[21][48];
 
     void makeindex();
     void delindex();
+
+    void getText();
 
     // Criador de capitulos
     char* endereco(void);

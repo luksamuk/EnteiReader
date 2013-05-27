@@ -32,6 +32,7 @@ extern Vigil* vigil;
 extern void (*showcontrols)(MENUTYPE);
 extern void (*killall) (void);
 extern void (*clearscr)(void);
+extern char* (*getEndereco)(void);
 
 typedef unsigned char byte;
 

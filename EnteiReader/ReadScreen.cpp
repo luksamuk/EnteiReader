@@ -79,6 +79,9 @@ void ReadScreen::update()
                 case KEY_LEFT:
                     break;
             }
+
+            for(int i = 0; i < 48; i++)
+                mvwprintw(reader, 1, 1, text[i]);
         }
         else // active == WINDOW_INDEX
         {
@@ -86,10 +89,11 @@ void ReadScreen::update()
             {
                 case KEY_DOWN:
                     if(selection < nchapters - 1) ++selection;
-                    this->refresh();
+                    getText();
                 break;
                 case KEY_UP:
                     if(selection > 0) --selection;
+                    getText();
                 break;
             }
         }
@@ -194,27 +198,13 @@ void ReadScreen::delindex()
 }
 
 // Capítulos
-char* ReadScreen::endereco(void)
-{
-    xml_document<> doc;
-    xml_node<> *node;
-    ifstream menu ("./temp/META-INF/container.xml");
-    vector<char> buffer ((istreambuf_iterator<char>(menu)), istreambuf_iterator<char>());
-    buffer.push_back('\0');
-    doc.parse<0>(&buffer[0]);
-    node = doc.first_node("container");
-    xml_node<> *endereco_node = node->first_node("rootfiles")->first_node("rootfile");
-    char* end = new char[255];
-    strcpy(end, "./temp/");
-    strcat(end, endereco_node->first_attribute("full-path")->value());
-    return end;
-}
+
 
 int ReadScreen::n_capitulos(void)
 {
     xml_document<> doc;
     xml_node<> *node;
-    ifstream menu(endereco());
+    ifstream menu((*getEndereco)());
     vector<char> buffer ((istreambuf_iterator<char>(menu)), istreambuf_iterator<char>());
     buffer.push_back('\0');
     doc.parse<0>(&buffer[0]);
@@ -232,7 +222,7 @@ void ReadScreen::capitulos(char** &c)
 {
     xml_document<> doc;
     xml_node<> *node;
-    ifstream menu(this->endereco());
+    ifstream menu((*getEndereco)());
     vector<char> buffer ((istreambuf_iterator<char>(menu)), istreambuf_iterator<char>());
     buffer.push_back('\0');
     doc.parse<0>(&buffer[0]);
@@ -247,4 +237,14 @@ void ReadScreen::capitulos(char** &c)
           i++;
        }
     }
+}
+
+void ReadScreen::getText()
+{
+    xml_document<> doc;
+    xml_node<> *node = doc.first_node("package");
+    char* end;
+    ifstream menu(indexlist[selection]);
+    end = print(text[0], doc, 0);
+    doc.parse<0>(&text[0][0]);
 }

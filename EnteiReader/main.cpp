@@ -7,11 +7,13 @@ WINDOW* controls;
 void (*showcontrols)(MENUTYPE);
 void (*killall)(void);
 void (*clearscr)(void);
+char* (*getEndereco)(void);
 
 void mostra_controles(int);
 void pair_colors(void);
 void KillAll(void);
 void ClearScr(void);
+char* endereco(void);
 
 Vigil* vigil;
 LibScreen*  libscr;
@@ -29,6 +31,7 @@ int main()
     showcontrols = &mostra_controles;
     killall = &KillAll;
     clearscr = &ClearScr;
+    getEndereco = &endereco;
     controls = newwin(0, 80, 23, 0);
     libscr = new LibScreen();
     readscr = new ReadScreen();
@@ -39,13 +42,13 @@ int main()
     {
         // Pede o livro
         libscr->init();
-        mostra_controles(1);
+        mostra_controles(MENU_LIBRARY);
         wrefresh(controls);
         libscr->update();
 
         // Mostra o livro
         readscr->init();
-        mostra_controles(0);
+        mostra_controles(MENU_READER);
         wrefresh(controls);
         readscr->refresh();
         readscr->update();
@@ -144,4 +147,20 @@ void ClearScr(void)
         for(int j = 0; j < LINES; j++)
             mvprintw(j, i, " ");
     refresh();
+}
+
+char* endereco(void)
+{
+    xml_document<> doc;
+    xml_node<> *node;
+    ifstream menu ("./temp/META-INF/container.xml");
+    vector<char> buffer ((istreambuf_iterator<char>(menu)), istreambuf_iterator<char>());
+    buffer.push_back('\0');
+    doc.parse<0>(&buffer[0]);
+    node = doc.first_node("container");
+    xml_node<> *endereco_node = node->first_node("rootfiles")->first_node("rootfile");
+    char* end = new char[255];
+    strcpy(end, "./temp/");
+    strcat(end, endereco_node->first_attribute("full-path")->value());
+    return end;
 }

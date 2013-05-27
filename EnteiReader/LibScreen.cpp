@@ -3,6 +3,7 @@
 LibScreen::LibScreen()
 {
     selection = 0;
+    curr_elem = 0;
     // Inicializa a janela
     win        = newwin(23, LIBSCREEN_FILESFIELD_SIZE, 0, 0);
     attributes = newwin(23, LIBSCREEN_ATTRFIELD_SIZE, 0, LIBSCREEN_FILESFIELD_SIZE);
@@ -14,6 +15,7 @@ LibScreen::LibScreen()
     vigil->addDir(".");
     vigil->addDir("./Books");
     vigil->update(false);
+    a = NULL;
 
     getBookList();
 }
@@ -26,6 +28,7 @@ LibScreen::~LibScreen()
 
 void LibScreen::init()
 {
+
     // Bordas
     box(win, 0, 0);
     box(attributes, 0, 0);
@@ -102,18 +105,22 @@ int LibScreen::update()
 
 void LibScreen::refresh()
 {
-    // Diferencia atributos. TESTE!!!
-    switch(selection)
+    clearAttributeField(LIBSCREEN_ATTRFIELD_NAME);
+    clearAttributeField(LIBSCREEN_ATTRFIELD_AUTHOR);
+    if(n_books > 0)
     {
-    default:
-        strcpy(b_name, "Lorem Ipsum");
-        strcpy(b_author, "Domínio Público");
-        strcpy(b_publisher, "Domínio Público");
-        break;
-    }
+        strcpy(b_name, books[selection].title);
+        strcpy(b_author, books[selection].author);
+        strcpy(b_publisher, books[selection].publisher);
 
-    for(int i = 0; i < n_books; i++)
-        printMenuElement(books[i].filename, i);
+        clipAttribute(books[selection].title);
+        clipAttribute(books[selection].author);
+        clipAttribute(books[selection].publisher);
+
+        for(int i = 0; i < n_books; i++)
+            printMenuElement(books[i].filename, i);
+        box(attributes, 0, 0);
+    }
 
     if(win)        wrefresh(win);
     if(attributes) wrefresh(attributes);
@@ -142,6 +149,14 @@ void LibScreen::printMenuElement(const char* text, int order)
     else mvwprintw(win, 3 + order, 1, text);
 }
 
+void LibScreen::printListRecursively(Node* a)
+{
+    if (a == NULL) return;
+    printListRecursively(a->esq);
+    printMenuElement(a->book->filename, curr_elem++);
+    printListRecursively(a->dir);
+}
+
 void LibScreen::clipFilename(char filename[])
 {
     char aux[255];
@@ -153,7 +168,7 @@ void LibScreen::clipFilename(char filename[])
         if(filename[i] != '/') i--;
         else break;
     }
-    while(i != strlen(filename))
+    while(i != (int)strlen(filename))
     {
         i++;
         aux[j] = filename[i];
@@ -171,14 +186,15 @@ void LibScreen::clipFilename(char filename[])
     }
 }
 
+
 void LibScreen::clipAttribute(char attribute[])
 {
-    if(strlen(attribute) > LIBSCREEN_ATTRFIELD_UTILSIZE - 1)
+    if(strlen(attribute) > LIBSCREEN_ATTRFIELD_UTILSIZE - 2)
     {
-        attribute[LIBSCREEN_ATTRFIELD_UTILSIZE]     = '\0';
-        attribute[LIBSCREEN_ATTRFIELD_UTILSIZE - 1] = '.';
+        attribute[LIBSCREEN_ATTRFIELD_UTILSIZE - 1]     = '\0';
         attribute[LIBSCREEN_ATTRFIELD_UTILSIZE - 2] = '.';
         attribute[LIBSCREEN_ATTRFIELD_UTILSIZE - 3] = '.';
+        attribute[LIBSCREEN_ATTRFIELD_UTILSIZE - 4] = '.';
     }
 }
 
@@ -198,16 +214,27 @@ void LibScreen::getBookList(void)
     n_books = vigil->filesCount();
     books = new Book[n_books];
 
-    Vigil::fileIndex* file = vigil->library();
+    Vigil::fileIndex* file;
+    file = vigil->library();
 
     if(file != NULL)
     {
         for(int i = 0; i < n_books; i++)
         {
-            books[i].filename = new char[255];
-            books[i].filepath = new char[255];
-            sprintf(books[i].filename, "%s", file->fileAddress);
+            books[i].filename  = new char[255];
+            books[i].filepath  = new char[255];
+            books[i].title     = new char[255];
+            books[i].author    = new char[255];
+            books[i].publisher = new char[255];
             sprintf(books[i].filepath, "%s", file->fileAddress);
+            sprintf(books[i].filename, "%s", file->fileAddress);
+
+            vigil->openFile(books[i].filepath, true);
+            sprintf(books[i].title, "%s", getTitulo((*getEndereco)()));
+            sprintf(books[i].author, "%s", getAutores((*getEndereco)()));
+            sprintf(books[i].publisher, "%s", getEditora((*getEndereco)()));
+            insereElemento(a, &books[i], i);
+
             clipFilename(books[i].filename);
             file = file->next;
         }
@@ -218,4 +245,67 @@ void LibScreen::delBookList(void)
 {
     selection = 0;
     n_books = 0;
+}
+
+char* LibScreen::getTitulo (char* a)
+{
+    xml_document<> doc;
+    xml_node<> *node;
+    ifstream menu (a);
+    vector<char> buffer ((istreambuf_iterator<char>(menu)), istreambuf_iterator<char>());
+    buffer.push_back('\0');
+    doc.parse<0>(&buffer[0]);
+    node = doc.first_node("package");
+    xml_node<> *titulo_node = node->first_node("metadata")->first_node("dc:title");
+    return titulo_node->value();
+}
+char* LibScreen::getAutores (char* a)
+{
+    xml_document<> doc;
+    xml_node<> *node;
+    ifstream menu (a);
+    vector<char> buffer ((istreambuf_iterator<char>(menu)), istreambuf_iterator<char>());
+    buffer.push_back('\0');
+    doc.parse<0>(&buffer[0]);
+    node = doc.first_node("package");
+    xml_node<> *autores_node = node->first_node("metadata")->first_node("dc:creator");
+    return autores_node->value();
+}
+
+char* LibScreen::getEditora (char* a)
+{
+    xml_document<> doc;
+    xml_node<> *node;
+    ifstream menu (a);
+    vector<char> buffer ((istreambuf_iterator<char>(menu)), istreambuf_iterator<char>());
+    buffer.push_back('\0');
+    doc.parse<0>(&buffer[0]);
+    node = doc.first_node("package");
+    xml_node<> *editora_node = node->first_node("metadata")->first_node("dc:publisher");
+    return editora_node->value();
+}
+
+// Relativo à árvore
+
+void LibScreen::insereElemento(Node *&a, Book* book, int bookid)
+{
+    if (a == NULL)
+    {
+        a = new Node;
+        a->dir = NULL;
+        a->esq = NULL;
+        a->book = book;
+        a->bookid = bookid;
+        return;
+    }
+    if (strcmp(book->title, a->book->title) == -1)
+    {
+        insereElemento(a->esq, book, bookid);
+        return;
+    }
+    if (strcmp(book->title,a->book->title) == 1)
+    {
+        insereElemento(a->dir, book, bookid);
+        return;
+    }
 }
